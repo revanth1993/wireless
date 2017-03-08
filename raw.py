@@ -4,8 +4,8 @@ s = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_RAW)
 
 packet = ''
 
-src_ip = '192.168.1.101'
-dst_ip = '192.168.1.102'
+src_ip = '10.0.2.15'
+dst_ip = '10.0.2.15'
 
 ip_ihl = 5
 ip_ver = 4
