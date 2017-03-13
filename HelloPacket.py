@@ -52,7 +52,7 @@ def helloPacket(interface):
 
     Src_IP = ni.ifaddresses(interface)[ni.AF_INET][0]['addr'].split('.')
 
-    ip_src = pack('!4c',chr(Src_IP[0]),chr(Src_IP[1]),chr(Src_IP[2]),chr(Src_IP[3]))
+    ip_src = pack('!4c',chr(int(Src_IP[0])),chr(int(Src_IP[1])),chr(int(Src_IP[2])),chr(int(Src_IP[3])))
     ip_dst = pack('!4c',chr(224),chr(0),chr(0),chr(4))
     ip_options = pack('!4c',chr(0),chr(0),chr(0),chr(0))
 
