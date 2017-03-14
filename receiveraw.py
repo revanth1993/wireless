@@ -28,7 +28,7 @@ def user_data(packet_data):
     print "-------------------------------------------------"
 
 def main():
-    listen = socket.socket(socket.PF_PACKET,socket.SOCK_RAW,socket.ntohs(0x800))    
+    listen = socket.socket(socket.AF_PACKET,socket.SOCK_RAW,socket.ntohs(0x800))
     while True:
         packet = listen.recvfrom(65565)
         packet = packet[0]
