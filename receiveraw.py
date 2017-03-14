@@ -1,6 +1,6 @@
 import socket,sys
 from struct import *
-
+import ExtractPacket as EP
 def eth_header(packet):
 
     print "---------------ETHERNET HEADER----------------------"
@@ -32,9 +32,10 @@ def main():
     while True:
         packet = listen.recvfrom(65565)
         packet = packet[0]
-        if ord(packet[23]) == 1:    
-            eth_header(packet[0:14])
-            ip_header(packet[14:])
+        print "--------------------"
+        print EP.extractPacketFields(packet)
+        print "--------------------"
+
     #user_data(packet[20:])
 
 main()
