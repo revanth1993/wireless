@@ -14,6 +14,7 @@ def extractPacketFields(packet):
     src_ip = str(ord(packet[26]))+'.'+str(ord(packet[27]))+'.'+str(ord(packet[28]))+'.'+str(ord(packet[29]))
     dst_ip = str(ord(packet[30]))+'.'+str(ord(packet[31]))+'.'+str(ord(packet[32]))+'.'+str(ord(packet[33]))
     dsdv_type = ord(packet[34])
+
     rib_neighbor = {}
 
     if dsdv_type == 3:
