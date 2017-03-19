@@ -32,9 +32,10 @@ def main():
     while True:
         packet = listen.recvfrom(65565)
         packet = packet[0]
-        print "-----------"
-        print EP.extractPacketFields(packet)
-        print "-----------"
+        if ord(packet[23]) == 253:
+            print "-----------"
+            print EP.extractPacketFields(packet)
+            print "-----------"
     #user_data(packet[20:])
 
 main()
