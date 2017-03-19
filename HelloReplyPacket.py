@@ -72,8 +72,8 @@ def helloReplyPacket(interface,d_mac,dstip):
 def main():
 
     interface = sys.argv[1]
-    d_mac = pack('!6c',chr(int('ff', 16)), chr(int('ff',16)),  chr(int('ff',16)) , chr(int('ff',16)), chr(int('ff',16)), chr(int('ff',16)))
-    ip_dst = pack('!4c',chr(224),chr(0),chr(0),chr(4))
+    d_mac = 'ff:ff:ff:ff:ff:ff'
+    ip_dst = '224.0.0.4'
     s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
     s.bind((interface,0))
     s.send(helloReplyPacket(interface,d_mac,ip_dst))
