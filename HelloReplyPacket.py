@@ -68,6 +68,9 @@ def helloReplyPacket(interface,d_mac,dstip):
 
     return ethernet_header+ip_header+payload
 
+def sendHelloReplyPacket(sock,interface,dmac,dstip):
+    sock.send(helloReplyPacket(interface,dmac,dstip))
+
 
 def main():
 
