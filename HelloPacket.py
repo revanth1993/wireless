@@ -62,6 +62,8 @@ def helloPacket(interface):
 
     return ethernet_header+ip_header+payload
 
+def sendHelloPacket(sock,interface):
+    sock.send(helloPacket(interface))
 
 def main():
 

@@ -1,5 +1,9 @@
 import DDPacket
 import ExtractPacket
+import HelloPacket
+import socket
+import time,sys
+import threading
 
 neighbors = {}
 rib = {}
@@ -27,12 +31,26 @@ def updateRIB(packet):
 
 def sendHello(interface):
     # periodically send hello packets through the interface
-    pass
+    s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
+    s.bind((interface,0))
+    while True:
+        HelloPacket.sendHelloPacket(s,interface)
+        time.sleep(5)
+
 
 def updateFIB():
-    #update tshe host FIB
+    #update the host FIB
     pass
 
 
+
+def main():
+
+    interface = sys.argv[1]
+    hellothread = threading.Thread(target=sendHello(),args=(interface))
+    hellothread.start()
+
+    x = raw_input()
+    hellothread.join(timeout = 1)
 
 
