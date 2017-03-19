@@ -7,7 +7,7 @@ import threading
 
 neighbors = {}
 rib = {}
-
+kill = 1
 # on reception of hello reply packet update neighbors
 def update_neighbors(srcip, s_mac, delay,age):
     neighbors[srcip] = [s_mac,delay,age]
@@ -33,7 +33,7 @@ def sendHello(interface):
     # periodically send hello packets through the interface
     s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
     s.bind((interface,0))
-    while True:
+    while kill:
         HelloPacket.sendHelloPacket(s,interface)
         time.sleep(5)
 
@@ -47,10 +47,12 @@ def updateFIB():
 def main():
 
     interface = sys.argv[1]
-    hellothread = threading.Thread(target=sendHello(),args=(interface))
+    hellothread = threading.Thread(target=sendHello,args=(interface,))
     hellothread.start()
 
     x = raw_input()
+    global kill
+    kill = 0
     hellothread.join(timeout = 1)
 
 
