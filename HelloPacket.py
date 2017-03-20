@@ -38,7 +38,7 @@ def helloPacket(interface):
     D_MAC = pack('!6c',chr(int('ff', 16)), chr(int('ff',16)),  chr(int('ff',16)) , chr(int('ff',16)), chr(int('ff',16)), chr(int('ff',16)))
     ETH_TYPE = pack('!2c',chr(int('08',16)),chr(int('00',16)))
 
-    ethernet_header = S_MAC+D_MAC+ETH_TYPE  # 14 bytes
+    ethernet_header = D_MAC+S_MAC+ETH_TYPE  # 14 bytes
 
 
     ip_v_ihl  = pack('!c',chr(int('45',16)))
