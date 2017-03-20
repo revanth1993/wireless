@@ -43,7 +43,7 @@ def sendHello():
     packet = HelloPacket.helloPacket(interface)
     while kill_all:
         t = datetime.now()
-        timestamp = pack('!3c',chr(((t/100)/100)%100),chr((t/100)%100),chr(t%100))
+        timestamp = pack('!3c',chr(((t.microsecond/100)/100)%100),chr((t.microsecond/100)%100),chr(t.microsecond%100))
         packet += timestamp
         s.send(packet)
         time.sleep(10)
