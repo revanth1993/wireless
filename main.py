@@ -5,6 +5,7 @@ import socket
 import time,sys
 import threading
 from datetime import datetime
+from struct import *
 
 neighbors = {}
 rib = {}
@@ -13,7 +14,10 @@ interface = ''
 
 # on reception of hello reply packet update neighbors
 def update_neighbors(srcip, s_mac, delay,age):
-    neighbors[srcip] = [s_mac,delay,age]
+    if srcip not in neighbors:
+        print "updating neighbors table"
+        neighbors[srcip] = [s_mac,delay,age]
+        print neighbors
 
 # on an update on local RIB send a DD packet
 def sendDD(sending_socket,interface):
@@ -38,7 +42,9 @@ def sendHello():
     s.bind((interface,0))
     packet = HelloPacket.helloPacket(interface)
     while kill_all:
-        print "sending hello " , datetime.now()
+        t = datetime.now()
+        timestamp = pack('!3c',chr(((t/100)/100)%100),chr((t/100)%100),chr(t%100))
+        packet += timestamp
         s.send(packet)
         time.sleep(10)
 
@@ -61,13 +67,15 @@ def listenSocket():
         if dsdv_type == 1:
             s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
             s.bind((interface,0))
-            HelloReplyPacket.sendHelloReplyPacket(s,interface,src_mac,src_ip)
+            s.send(HelloReplyPacket.helloReplyPacket(interface,src_mac,src_ip,packet[24:27]))
             s.close()
 
         elif dsdv_type == 2:
-            print "reply came ", datetime.now()
-            delay = 1
-            update_neighbors(src_ip,src_mac,1,10)
+            t = datetime.now()
+            timestamp = ord(packet[24])*100000 + ord(packet[25])*1000 + ord(packet[26])
+            print "reply came ", t
+            delay = t.microsecond - timestamp
+            update_neighbors(src_ip,src_mac,delay,10)
 
         elif dsdv_type == 3:
             updateRIB(packet)

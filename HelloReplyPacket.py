@@ -29,7 +29,7 @@ from netifaces import *
 def toBytes(x):
     return (int(x,16))
 
-def helloReplyPacket(interface,d_mac,dstip):
+def helloReplyPacket(interface,d_mac,dstip,timestamp):
     if interface not in ni.interfaces():
         return None
 
@@ -64,9 +64,9 @@ def helloReplyPacket(interface,d_mac,dstip):
 
     ip_header = ip_v_ihl + ip_tos + ip_tot_len + ip_id + ip_frag_off + ip_ttl + ip_proto + ip_check + ip_src + ip_dst
 
-    payload = pack('!c',chr(2))
+    dsdv_type = pack('!c',chr(2))
 
-    return ethernet_header+ip_header+payload
+    return ethernet_header+ip_header+dsdv_type+timestamp
 
 def sendHelloReplyPacket(sock,interface,dmac,dstip):
     sock.send(helloReplyPacket(interface,dmac,dstip))
