@@ -59,7 +59,7 @@ def listenSocket():
             print "received a hello packet"
             s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
             s.bind((interface,0))
-            HelloReplyPacket.sendHelloReplyPacket(interface,dst_mac,dst_ip)
+            HelloReplyPacket.sendHelloReplyPacket(s,interface,dst_mac,dst_ip)
             s.close()
 
         elif dsdv_type == 2:
