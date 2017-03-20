@@ -69,8 +69,7 @@ def helloReplyPacket(interface,d_mac,dstip,timestamp):
 
     return ethernet_header+ip_header+dsdv_type+timestamp
 
-def sendHelloReplyPacket(sock,interface,dmac,dstip):
-    sock.send(helloReplyPacket(interface,dmac,dstip))
+
 
 
 def main():

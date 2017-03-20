@@ -46,6 +46,7 @@ def sendHello():
         timestamp = pack('!3c',chr(((t.microsecond/100)/100)%100),chr((t.microsecond/100)%100),chr(t.microsecond%100))
         packet += timestamp
         s.send(packet)
+        print "hello packet sent at ", t
         time.sleep(10)
 
 
@@ -68,17 +69,18 @@ def listenSocket():
             s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
             s.bind((interface,0))
             s.send(HelloReplyPacket.helloReplyPacket(interface,src_mac,src_ip,packet[24:27]))
+            print "sent a hello reply packet to ",src_ip
             s.close()
 
         elif dsdv_type == 2:
             t = datetime.now()
             timestamp = ord(packet[24])*100000 + ord(packet[25])*1000 + ord(packet[26])
-            print "reply came ", t
+            print "hello reply came from ",src_ip, t
             delay = t.microsecond - timestamp
             update_neighbors(src_ip,src_mac,delay,10)
 
         elif dsdv_type == 3:
-            updateRIB(packet)
+            updateRIB(rib_neighbor)
 
 
 def main():
