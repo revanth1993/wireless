@@ -66,7 +66,7 @@ def helloReplyPacket(interface,d_mac,dstip,timestamp):
     ip_header = ip_v_ihl + ip_tos + ip_tot_len + ip_id + ip_frag_off + ip_ttl + ip_proto + ip_check + ip_src + ip_dst
 
     dsdv_type = pack('!c',chr(2))
-
+    timestamp = pack('!3c',timestamp[0],timestamp[1],timestamp[2])
     return ethernet_header+ip_header+dsdv_type+timestamp
 
 
