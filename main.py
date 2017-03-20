@@ -4,6 +4,7 @@ import HelloPacket,HelloReplyPacket
 import socket
 import time,sys
 import threading
+from datetime import datetime
 
 neighbors = {}
 rib = {}
@@ -35,9 +36,11 @@ def sendHello():
     # periodically send hello packets through the interface
     s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
     s.bind((interface,0))
+    packet = HelloPacket.helloPacket(interface)
     while kill_all:
-        HelloPacket.sendHelloPacket(s,interface)
-        time.sleep(5)
+        print "sending hello " , datetime.now()
+        s.send(packet)
+        time.sleep(10)
 
 
 def updateFIB():
@@ -56,14 +59,13 @@ def listenSocket():
 
 
         if dsdv_type == 1:
-            print "received a hello packet"
             s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
             s.bind((interface,0))
             HelloReplyPacket.sendHelloReplyPacket(s,interface,src_mac,src_ip)
             s.close()
 
         elif dsdv_type == 2:
-            print "received hello reply"
+            print "reply came ", datetime.now()
             delay = 1
             update_neighbors(src_ip,src_mac,1,10)
 
