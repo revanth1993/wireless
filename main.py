@@ -100,7 +100,7 @@ def main():
     x = raw_input()
     kill_all = 0
     hellothread.join(timeout = 1)
-    listenthread.join(timeout=1)
+    listenthread.join(timeout = 1)
 
 
 
