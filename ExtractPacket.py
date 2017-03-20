@@ -9,8 +9,8 @@ def extractPacketFields(packet):
     if not ord(packet[23]) == 253:
         return
 
-    src_mac = format(ord(packet[0]),'02x') + ':' + format(ord(packet[1]),'02x') + ':' + format(ord(packet[2]),'02x') + ':' + format(ord(packet[3]),'02x') + ':' + format(ord(packet[4]),'02x') + ':' +format(ord(packet[5]),'02x')
-    dst_mac = format(ord(packet[6]),'02x') + ':' + format(ord(packet[7]),'02x') + ':' + format(ord(packet[8]),'02x') + ':' + format(ord(packet[9]),'02x') + ':' + format(ord(packet[10]),'02x') + ':' +format(ord(packet[11]),'02x')
+    dst_mac = format(ord(packet[0]),'02x') + ':' + format(ord(packet[1]),'02x') + ':' + format(ord(packet[2]),'02x') + ':' + format(ord(packet[3]),'02x') + ':' + format(ord(packet[4]),'02x') + ':' +format(ord(packet[5]),'02x')
+    src_mac = format(ord(packet[6]),'02x') + ':' + format(ord(packet[7]),'02x') + ':' + format(ord(packet[8]),'02x') + ':' + format(ord(packet[9]),'02x') + ':' + format(ord(packet[10]),'02x') + ':' +format(ord(packet[11]),'02x')
     eth_type = format(ord(packet[12]),'02x') + format(ord(packet[13]),'02x')
 
 

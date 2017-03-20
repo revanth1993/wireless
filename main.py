@@ -74,7 +74,7 @@ def listenSocket():
 
         elif dsdv_type == 2:
             t = datetime.now()
-            timestamp = ord(packet[24])*100000 + ord(packet[25])*1000 + ord(packet[26])
+            timestamp = ord(packet[24])*10000 + ord(packet[25])*100 + ord(packet[26])
             print "hello reply came from ",src_ip, t
             delay = t.microsecond - timestamp
             update_neighbors(src_ip,src_mac,delay,10)
