@@ -51,10 +51,9 @@ def listenSocket():
         packet = packet[0]
         if ord(packet[23]) != 253:
             continue
-        print "-----------"
+
         src_mac,dst_mac,eth_type,src_ip,dst_ip,dsdv_type,rib_neighbor = ExtractPacket.extractPacketFields(packet)
-        print src_mac,dst_mac,eth_type,src_ip,dst_ip,dsdv_type,rib_neighbor
-        print "-----------"
+
 
         if dsdv_type == 1:
             print "received a hello packet"
@@ -62,10 +61,12 @@ def listenSocket():
             s.bind((interface,0))
             HelloReplyPacket.sendHelloReplyPacket(interface,dst_mac,dst_ip)
             s.close()
+
         elif dsdv_type == 2:
             print "received hello reply"
             delay = 1
             update_neighbors(src_ip,src_mac,1,10)
+
         elif dsdv_type == 3:
             updateRIB(packet)
 
@@ -81,9 +82,14 @@ def main():
     hellothread = threading.Thread(target=sendHello,args=())
     hellothread.start()
 
+    listenthread = threading.Thread(target=listenSocket, args=())
+    listenthread.start()
+
     x = raw_input()
     kill_all = 0
     hellothread.join(timeout = 1)
+    listenthread.join(timeout=1)
+
 
 
 
