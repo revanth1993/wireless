@@ -61,6 +61,7 @@ def listenSocket():
             s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
             s.bind((interface,0))
             HelloReplyPacket.sendHelloReplyPacket(interface,dst_mac,dst_ip)
+            s.close()
         elif dsdv_type == 2:
             print "received hello reply"
             delay = 1
