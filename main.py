@@ -40,11 +40,11 @@ def sendHello():
     # periodically send hello packets through the interface
     s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
     s.bind((interface,0))
-    packet = HelloPacket.helloPacket(interface)
+    hellopacket = HelloPacket.helloPacket(interface)
     while kill_all:
         t = datetime.now()
         timestamp = pack('!3c',chr(((t.microsecond/100)/100)%100),chr((t.microsecond/100)%100),chr(t.microsecond%100))
-        packet += timestamp
+        packet = hellopacket + timestamp
         s.send(packet)
         print "hello packet sent at ", t
         time.sleep(10)
