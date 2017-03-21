@@ -71,8 +71,8 @@ def ddPacket(interface,rib):
     for entry in rib:
         ip = entry.split('.')
         srcip = pack('!4c',chr(int(ip[0])),chr(int(ip[1])),chr(int(ip[2])),chr(int(ip[3])))
-        delay = pack('!2c',chr(rib[entry][0]/100),chr(rib[entry][0]%100))
-        sequence_number = pack('!2c',chr(rib[entry][1]/100),chr(rib[entry][1]%100))
+        delay = pack('!2c',chr(rib[entry][1]/100),chr(rib[entry][1]%100))
+        sequence_number = pack('!2c',chr(rib[entry][2]/100),chr(rib[entry][2]%100))
         payload += srcip+delay+sequence_number
     return ethernet_header+ip_header+dsdv_type+entries+payload
 
@@ -82,7 +82,7 @@ def main():
     interface = sys.argv[1]
     s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
     s.bind((interface,0))
-    rib = {'192.168.1.1':[1000,2],'192.168.1.2':[9988,4],'192.168.4.2':[900,10]}
+    rib = {'192.168.1.1':['10.10.10.1',1000,2],'192.168.1.2':['10.10.10.1',9988,4],'192.168.4.2':['10.10.10.1',900,10]}
     s.send(ddPacket(interface,rib))
 
 

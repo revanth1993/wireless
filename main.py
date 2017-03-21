@@ -43,10 +43,42 @@ def sendDD():
 # on reception of hello reply packet if triggers a change in the local RIB or on reception of DD packet
 # which results in the change of local RIB update RIB
 
-def updateRIB(neighbor_rib):
+def updateRIB(srcip, neighbor_rib):
     # only if a DD packet is received this function is called, neighbor_rib is passed to the function which is extracted from
     # the extractpacketfields function, it is a dictionary with key as the destination ip and the values as cost, sequence number
     # next hop should be set in the RIB and send a DD packet
+    #
+    # algo for updating RIB  -- neighbors broadcast the ip addresses that they know of
+    # 1) destination ip not present in local RIB - host first time learning about an ip
+    # 2) destination ip already present
+    #       a) check sequence number if it is less discard
+    #       b) if it is equal and even update with the minimum delay
+    #       c) if it is greater and odd neighbor is advertising that the destination ip is not reachable ?? how to tackle this?
+    #           may be making the delay to a max value 9999, while updating the local FIB if the delay is 9999 dont add an entry
+
+    # updating RIB delay should be a sum of delay that neighbor advertises and delay to the neighbor
+    # next hop is the srcip parameter passed to the function
+
+    global rib,neighbors
+    change = 0
+    for entry in neighbor_rib:
+        if entry not in rib:
+            change = 1
+            rib[entry] = [srcip,neighbor_rib[entry][0],neighbor_rib[entry][1]]
+        else:
+            sequence_number_neighbor = neighbor_rib[entry][1]
+            delay_neighbor = neighbor_rib[entry][0]
+            sequence_number_local = rib[entry][2]
+            delay_local = rib[entry][1]
+            delay_to_neighbor = neighbors[entry][0]
+            if sequence_number_neighbor == sequence_number_local and delay_local != min(delay_local,delay_neighbor+delay_to_neighbor):
+                change = 1
+                rib[entry] = [srcip,neighbor_rib[entry][0],neighbor_rib[entry][1]]
+            elif sequence_number_neighbor%2 != 0:
+                change = 1
+                rib[entry] = [srcip,neighbor_rib[entry][0],neighbor_rib[entry][1]]
+    if change:
+        sendDD()
     pass
 
 def sendHello():
@@ -95,7 +127,8 @@ def listenSocket():
             update_neighbors(src_ip,src_mac,delay,10)
 
         elif dsdv_type == 3:
-            updateRIB(rib_neighbor)
+            print "received a DD packet "
+            updateRIB(src_ip, rib_neighbor)
 
 
 def main():
