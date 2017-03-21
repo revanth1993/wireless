@@ -21,7 +21,7 @@ def extractPacketFields(packet):
     rib_neighbor = {}
 
     if dsdv_type == 3:
-        entries = ord(packet[35])
+        entries = ord(packet[35])*10000 + ord(packet[36])*100 + ord(packet[37])
         start = 38
 
         for entry in xrange(entries):
