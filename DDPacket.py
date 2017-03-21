@@ -65,7 +65,7 @@ def ddPacket(interface,rib):
 
     ip_header = ip_v_ihl + ip_tos + ip_tot_len + ip_id + ip_frag_off + ip_ttl + ip_proto + ip_check + ip_src + ip_dst
 
-    payload = pack('!c',chr(1))
+    payload = pack('!c',chr(3))
 
     return ethernet_header+ip_header+payload
 
