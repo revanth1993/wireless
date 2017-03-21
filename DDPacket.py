@@ -65,8 +65,15 @@ def ddPacket(interface,rib):
 
     ip_header = ip_v_ihl + ip_tos + ip_tot_len + ip_id + ip_frag_off + ip_ttl + ip_proto + ip_check + ip_src + ip_dst
 
-    payload = pack('!c',chr(3))
-
+    dsdv_type = pack('!c',chr(3))
+    entries   = pack('!3c', chr(0),chr(0),chr(len(rib)))
+    payload = ''
+    for entry in rib:
+        ip = entry.split('.')
+        srcip = pack('!4c',chr(int(ip[0])),chr(int(ip[1])),chr(int(ip[2])),chr(int(ip[3])))
+        delay = pack('!2c',chr(rib[entry][0]/100),chr(rib[entry][0]%100))
+        sequence_number = pack('!2c',chr(rib[entry][1]/100),chr(rib[entry][1]%100))
+        payload += srcip+delay+sequence_number
     return ethernet_header+ip_header+payload
 
 
@@ -75,7 +82,8 @@ def main():
     interface = sys.argv[1]
     s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
     s.bind((interface,0))
-    s.send(ddPacket(interface))
+    rib = {'192.168.1.1':[1000,2],'192.168.1.2':[9988,4],'192.168.4.2':[900,10]}
+    s.send(ddPacket(interface,rib))
 
 
 if __name__ == "__main__":
