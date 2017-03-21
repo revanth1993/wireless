@@ -29,7 +29,7 @@ def extractPacketFields(packet):
             delay = ord(packet[start+5])*100 + ord(packet[start+6])
             sequence_number = ord(packet[start+7])*100 + ord(packet[start+8])
             rib_neighbor[ip] = [delay,sequence_number]
-            start += 8*entry
+            start += 8*(entry+1)
 
     return src_mac,dst_mac,eth_type,src_ip,dst_ip,dsdv_type,rib_neighbor
 
