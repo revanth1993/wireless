@@ -89,7 +89,9 @@ def deadtimer():
     while kill_all:
         local_neighbor = neighbors
         for entry in local_neighbor:
-            if local_neighbor[entry][2] and local_neighbor[entry][1] != 0 :
+            if local_neighbor[entry][1] == 0:
+                continue
+            elif local_neighbor[entry][2]:
                 local_neighbor[entry][2] = 0
             else:
                 print "removing "+entry+" from neighbors table considering it dead "
@@ -164,7 +166,7 @@ def main():
     # with local ip, set delay to 0, initiate a sequence number
     ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
     rib[ip] = [ip,0,2]
-    neighbors[ip] = [ni.ifaddresses(interface)[AF_LINK][0]['addr'], 0 , 10]
+    neighbors[ip] = [ni.ifaddresses(interface)[AF_LINK][0]['addr'], 0 , 1]
 
     hellothread = threading.Thread(target=sendHello, args=())
     hellothread.start()
