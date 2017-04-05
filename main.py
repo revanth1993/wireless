@@ -89,7 +89,8 @@ def sendHello():
     hellopacket = HelloPacket.helloPacket(interface)
     while kill_all:
         t = datetime.now()
-        timestamp = pack('!3c',chr(((t.microsecond/100)/100)%100),chr((t.microsecond/100)%100),chr(t.microsecond%100))
+        stamp = (t.second%10)*100000 + t.microsecond/10
+        timestamp = pack('!3c',chr(((stamp/100)/100)%100),chr((stamp/100)%100),chr(stamp%100))
         packet = hellopacket + timestamp
         s.send(packet)
         print "hello packet sent at ", t
