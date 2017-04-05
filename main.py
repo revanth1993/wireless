@@ -15,7 +15,7 @@ kill_all = 1
 interface = ''
 
 # on reception of hello reply packet update neighbors
-def update_neighbors(srcip, s_mac, delay, age):
+def update_neighbors(srcip, s_mac, delay, flag):
     # three conditions
     # 1. srcip not present in neighbors table update neighbors table and trigger a DD packet
     # 2. srcip already present delay is within the acceptable range update the delay
@@ -23,13 +23,13 @@ def update_neighbors(srcip, s_mac, delay, age):
     global neighbors
     if srcip not in neighbors:
         print "first entry in neighbors table and sending a DD packet"
-        neighbors[srcip] = [s_mac,delay,age]
+        neighbors[srcip] = [s_mac,delay,flag]
         print neighbors
         sendDD()
 
     else:
         print "updating table with new delay"
-        neighbors[srcip] = [s_mac,delay,age]
+        neighbors[srcip] = [s_mac,delay,flag]
         print neighbors
 
 # on an update on local RIB send a DD packet
@@ -83,6 +83,19 @@ def updateRIB(srcip, neighbor_rib):
     if change:
         sendDD()
 
+def deadtimer():
+    global kill_all, neighbors
+
+    while kill_all:
+        local_neighbor = neighbors
+        for entry in local_neighbor:
+            if local_neighbor[entry][2]:
+                local_neighbor[entry][2] = 0
+            else:
+                print "removing "+entry+" from neighbors table considering it dead "
+                del neighbors[entry]
+                print neighbors
+        time.sleep(10)
 
 def sendHello():
     # periodically send hello packets through the interface
@@ -129,7 +142,7 @@ def listenSocket():
             timestamp = ord(packet[35])*10000 + ord(packet[36])*100 + ord(packet[37])
             print "hello reply came from ",src_ip, t
             delay = stamp_now - timestamp
-            update_neighbors(src_ip,src_mac,delay,10)
+            update_neighbors(src_ip,src_mac,delay,1)
 
         elif dsdv_type == 3:
             print "received a DD packet "
@@ -155,6 +168,9 @@ def main():
 
     hellothread = threading.Thread(target=sendHello, args=())
     hellothread.start()
+
+    deadtimerthread = threading.Thread(target=deadtimer, args=())
+    deadtimerthread.start()
 
     listenthread = threading.Thread(target=listenSocket, args=())
     listenthread.start()
