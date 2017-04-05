@@ -7,6 +7,7 @@ import threading
 from datetime import datetime
 from struct import *
 import netifaces as ni
+from netifaces import *
 
 neighbors = {}
 rib = {}
@@ -150,7 +151,7 @@ def main():
     # with local ip, set delay to 0, initiate a sequence number
     ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
     rib[ip] = [ip,0,2]
-
+    neighbors[ip] = [ni.ifaddresses(interface)[AF_LINK][0]['addr'], 0 , 10]
 
     hellothread = threading.Thread(target=sendHello, args=())
     hellothread.start()
