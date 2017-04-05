@@ -61,6 +61,7 @@ def updateRIB(srcip, neighbor_rib):
 
     global rib,neighbors
     change = 0
+
     print "updating RIB with neighbor ",neighbor_rib
     for entry in neighbor_rib:
         if entry not in rib:
@@ -131,6 +132,9 @@ def listenSocket():
 
         elif dsdv_type == 3:
             print "received a DD packet "
+            if src_ip not in neighbors:
+                print "neighbor not discovered yet will not update RIB"
+                continue
             updateRIB(src_ip, rib_neighbor)
 
 
