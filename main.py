@@ -61,6 +61,7 @@ def updateRIB(srcip, neighbor_rib):
 
     global rib,neighbors
     change = 0
+    print "updating RIB with neighbor ",neighbor_rib
     for entry in neighbor_rib:
         if entry not in rib:
             change = 1
@@ -79,7 +80,7 @@ def updateRIB(srcip, neighbor_rib):
                 rib[entry] = [srcip,neighbor_rib[entry][0],neighbor_rib[entry][1]]
     if change:
         sendDD()
-    pass
+
 
 def sendHello():
     # periodically send hello packets through the interface
@@ -122,9 +123,10 @@ def listenSocket():
 
         elif dsdv_type == 2:
             t = datetime.now()
+            stamp_now = (t.second%10)*100000 + t.microsecond/10
             timestamp = ord(packet[35])*10000 + ord(packet[36])*100 + ord(packet[37])
-            print "hello reply came from ",src_ip, t.microsecond
-            delay = t.microsecond - timestamp
+            print "hello reply came from ",src_ip, t
+            delay = stamp_now - timestamp
             update_neighbors(src_ip,src_mac,delay,10)
 
         elif dsdv_type == 3:
