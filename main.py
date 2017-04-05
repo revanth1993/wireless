@@ -89,7 +89,7 @@ def deadtimer():
     while kill_all:
         local_neighbor = neighbors
         for entry in local_neighbor:
-            if local_neighbor[entry][2]:
+            if local_neighbor[entry][2] and local_neighbor[entry][1] != 0 :
                 local_neighbor[entry][2] = 0
             else:
                 print "removing "+entry+" from neighbors table considering it dead "
