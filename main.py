@@ -159,13 +159,13 @@ def printRIB():
     global rib
     print "DstIP\t\t\tNextHop\t\t\tDelay\t\t\tSeq_Num"
     for dstip in rib:
-        print dstip+"\t\t\t"+rib[dstip][0]+"\t\t\t"+rib[dstip][1]+"\t\t\t"+rib[dstip][2]
+        print str(dstip)+"\t\t\t"+str(rib[dstip][0])+"\t\t\t"+str(rib[dstip][1])+"\t\t\t"+str(rib[dstip][2])
 
 def printNeighbors():
     global neighbors
-    print "DstIP\t\t\t\t\t\tDelay"
+    print "DstIP\t\t\tMAC\t\t\tDelay"
     for dstip in neighbors:
-        print dstip+"\t\t\t"+neighbors[dstip][0]
+        print dstip+"\t\t\t"+neighbors[dstip][0]+"\t\t\t"+neighbors[dstip][1]
 
 
 def main():
@@ -199,7 +199,7 @@ def main():
             printRIB()
         elif x == '3':
             break
-        x = raw_input("1. View neighbors 2. Routing information base")
+        x = raw_input("1. View neighbors 2. Routing information base 3. Stop & Exi")
 
     kill_all = 0
     hellothread.join(timeout = 1)
