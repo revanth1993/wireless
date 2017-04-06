@@ -87,16 +87,19 @@ def deadtimer():
     global kill_all, neighbors
 
     while kill_all:
-        local_neighbor = neighbors
-        for entry in local_neighbor:
-            if local_neighbor[entry][1] == 0:
+        dead_neighbors = []
+        for entry in neighbors:
+            if neighbors[entry][1] == 0:
                 continue
-            elif local_neighbor[entry][2]:
-                local_neighbor[entry][2] = 0
+            elif neighbors[entry][2]:
+                neighbors[entry][2] = 0
             else:
                 print "removing "+entry+" from neighbors table considering it dead "
-                del neighbors[entry]
-                print neighbors
+                dead_neighbors.append(entry)
+
+        for dead_neighbor in dead_neighbors:
+            print "neighbor considered dead ",dead_neighbor
+            del neighbors[dead_neighbor]
         time.sleep(10)
 
 def sendHello():
