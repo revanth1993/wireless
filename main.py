@@ -159,13 +159,13 @@ def printRIB():
     global rib
     print "DstIP\t\t\tNextHop\t\t\tDelay\t\t\tSeq_Num"
     for dstip in rib:
-        print str(dstip)+"\t\t\t"+str(rib[dstip][0])+"\t\t\t"+str(rib[dstip][1])+"\t\t\t"+str(rib[dstip][2])
+        print str(dstip)+"\t"+str(rib[dstip][0])+"\t"+str(rib[dstip][1])+"\t"+str(rib[dstip][2])
 
 def printNeighbors():
     global neighbors
     print "DstIP\t\t\tMAC\t\t\tDelay"
     for dstip in neighbors:
-        print str(dstip)+"\t\t\t"+str(neighbors[dstip][0])+"\t\t\t"+str(neighbors[dstip][1])
+        print str(dstip)+"\t"+str(neighbors[dstip][0])+"\t"+str(neighbors[dstip][1])
 
 
 def main():
