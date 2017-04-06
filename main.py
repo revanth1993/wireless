@@ -94,7 +94,6 @@ def deadtimer():
             elif neighbors[entry][2]:
                 neighbors[entry][2] = 0
             else:
-                print "removing "+entry+" from neighbors table considering it dead "
                 dead_neighbors.append(entry)
 
         for dead_neighbor in dead_neighbors:
@@ -114,7 +113,7 @@ def sendHello():
         timestamp = pack('!3c',chr(((stamp/100)/100)%100),chr((stamp/100)%100),chr(stamp%100))
         packet = hellopacket + timestamp
         s.send(packet)
-        print "hello packet sent at ", t
+        print "[HELLO] ", t
         time.sleep(10)
 
 
@@ -138,23 +137,35 @@ def listenSocket():
             s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
             s.bind((interface,0))
             s.send(HelloReplyPacket.helloReplyPacket(interface,src_mac,src_ip,packet[35:38]))
-            print "sent a hello reply packet to ",src_ip
+            #print "[HELLO REPLY] ",src_ip
             s.close()
 
         elif dsdv_type == 2:
             t = datetime.now()
             stamp_now = (t.second%10)*100000 + t.microsecond/10
             timestamp = ord(packet[35])*10000 + ord(packet[36])*100 + ord(packet[37])
-            print "hello reply came from ",src_ip, t
+            print "[HELLO REPLY] ",src_ip, t
             delay = stamp_now - timestamp
             update_neighbors(src_ip,src_mac,delay,1)
 
         elif dsdv_type == 3:
-            print "received a DD packet "
+            print "[DD PACKET] ", src_ip, rib_neighbor
             if src_ip not in neighbors:
-                print "neighbor not discovered yet will not update RIB"
+                print "No update, Neighborship not formed yet with ", src_ip
                 continue
             updateRIB(src_ip, rib_neighbor)
+
+def printRIB():
+    global rib
+    print "DstIP\t\t\tNextHop\t\t\tDelay\t\t\tSeq_Num"
+    for dstip in rib:
+        print dstip+"\t\t\t"+rib[dstip][0]+"\t\t\t"+rib[dstip][1]+"\t\t\t"+rib[dstip][2]
+
+def printNeighbors():
+    global neighbors
+    print "DstIP\t\t\t\t\t\tDelay"
+    for dstip in neighbors:
+        print dstip+"\t\t\t"+neighbors[dstip][0]
 
 
 def main():
@@ -180,7 +191,14 @@ def main():
     listenthread = threading.Thread(target=listenSocket, args=())
     listenthread.start()
 
-    x = raw_input()
+    x = raw_input("1. View neighbors 2. Routing information base")
+    while(x == '1' or x == '2'):
+        if x == '1':
+            printNeighbors()
+        else:
+            printRIB()
+        x = raw_input("1. View neighbors 2. Routing information base")
+
     kill_all = 0
     hellothread.join(timeout = 1)
     listenthread.join(timeout = 1)
