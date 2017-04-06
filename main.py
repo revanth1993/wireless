@@ -191,12 +191,14 @@ def main():
     listenthread = threading.Thread(target=listenSocket, args=())
     listenthread.start()
 
-    x = raw_input("1. View neighbors 2. Routing information base")
-    while(x == '1' or x == '2'):
+    x = raw_input("1. View neighbors 2. Routing information base 3. Stop & Exit")
+    while(True):
         if x == '1':
             printNeighbors()
-        else:
+        elif x == '2':
             printRIB()
+        elif x == '3':
+            break
         x = raw_input("1. View neighbors 2. Routing information base")
 
     kill_all = 0
