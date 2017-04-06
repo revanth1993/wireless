@@ -172,8 +172,6 @@ def main():
 
     global kill_all,interface,rib
 
-
-
     interface = sys.argv[1]
 
     # Intialise RIB
