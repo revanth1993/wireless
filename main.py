@@ -84,7 +84,7 @@ def updateRIB(srcip, neighbor_rib):
         sendDD()
 
 def deadtimer():
-    global kill_all, neighbors
+    global kill_all, neighbors, rib
 
     while kill_all:
         dead_neighbors = []
@@ -99,6 +99,9 @@ def deadtimer():
         for dead_neighbor in dead_neighbors:
             print "neighbor considered dead ",dead_neighbor
             del neighbors[dead_neighbor]
+            if dead_neighbor in rib:
+                rib[dead_neighbor][2]+=1
+        sendDD()
         time.sleep(10)
 
 def sendHello():
@@ -157,16 +160,19 @@ def listenSocket():
 
 def printRIB():
     global rib
+    print "--------------Routing Table-----------------"
     print "DstIP\t\tNextHop\t\tDelay\tSeq_Num"
     for dstip in rib:
         print str(dstip)+"\t"+str(rib[dstip][0])+"\t"+str(rib[dstip][1])+"\t"+str(rib[dstip][2])
+    print "--------------------------------------------"
 
 def printNeighbors():
     global neighbors
+    print "--------------Neighbors Table-----------------"
     print "DstIP\t\t\tMAC\t\tDelay"
     for dstip in neighbors:
         print str(dstip)+"\t"+str(neighbors[dstip][0])+"\t"+str(neighbors[dstip][1])
-
+    print "----------------------------------------------"
 
 def main():
 
