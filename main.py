@@ -165,7 +165,7 @@ def printNeighbors():
     global neighbors
     print "DstIP\t\t\tMAC\t\t\tDelay"
     for dstip in neighbors:
-        print dstip+"\t\t\t"+neighbors[dstip][0]+"\t\t\t"+neighbors[dstip][1]
+        print str(dstip)+"\t\t\t"+str(neighbors[dstip][0])+"\t\t\t"+str(neighbors[dstip][1])
 
 
 def main():
