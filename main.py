@@ -39,6 +39,7 @@ def sendDD():
     s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
     s.bind((interface,0))
     s.send(DDPacket.ddPacket(interface,rib))
+    print "[SND DD PACKET] ",rib
     s.close()
 
 # on reception of hello reply packet if triggers a change in the local RIB or on reception of DD packet
@@ -118,7 +119,7 @@ def sendHello():
         timestamp = pack('!3c',chr(((stamp/100)/100)%100),chr((stamp/100)%100),chr(stamp%100))
         packet = hellopacket + timestamp
         s.send(packet)
-        print "[HELLO] ", t
+        print "[SND HELLO] ", t
         time.sleep(10)
 
 
@@ -142,19 +143,19 @@ def listenSocket():
             s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
             s.bind((interface,0))
             s.send(HelloReplyPacket.helloReplyPacket(interface,src_mac,src_ip,packet[35:38]))
-            #print "[HELLO REPLY] ",src_ip
+            print "[RCV HELLO REPLY] ",src_ip
             s.close()
 
         elif dsdv_type == 2:
             t = datetime.now()
             stamp_now = (t.second%10)*100000 + t.microsecond/10
             timestamp = ord(packet[35])*10000 + ord(packet[36])*100 + ord(packet[37])
-            print "[HELLO REPLY] ",src_ip, t
+            print "[RCV HELLO REPLY] ",src_ip, t
             delay = stamp_now - timestamp
             update_neighbors(src_ip,src_mac,delay,1)
 
         elif dsdv_type == 3:
-            print "[DD PACKET] ", src_ip, rib_neighbor
+            print "[RCV DD PACKET] ", src_ip, rib_neighbor
             if src_ip not in neighbors:
                 print "No update, Neighborship not formed yet with ", src_ip
                 continue
@@ -162,19 +163,19 @@ def listenSocket():
 
 def printRIB():
     global rib
-    print "--------------Routing Table-----------------"
+    print "\n--------------Routing Table-----------------\n"
     print "DstIP\t\tNextHop\t\tDelay\tSeq_Num"
     for dstip in rib:
         print str(dstip)+"\t"+str(rib[dstip][0])+"\t"+str(rib[dstip][1])+"\t"+str(rib[dstip][2])
-    print "--------------------------------------------"
+    print "\n--------------------------------------------\n"
 
 def printNeighbors():
     global neighbors
-    print "--------------Neighbors Table-----------------"
+    print "\n--------------Neighbors Table-----------------\n"
     print "DstIP\t\t\tMAC\t\tDelay"
     for dstip in neighbors:
         print str(dstip)+"\t"+str(neighbors[dstip][0])+"\t"+str(neighbors[dstip][1])
-    print "----------------------------------------------"
+    print "\n----------------------------------------------\n"
 
 def main():
 
