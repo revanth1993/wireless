@@ -102,7 +102,7 @@ def deadtimer():
             if dead_neighbor in rib:
                 rib[dead_neighbor][2]+=1
 
-        if dead_neighbor:
+        if dead_neighbors:
             sendDD()
         time.sleep(10)
 
