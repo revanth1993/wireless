@@ -101,7 +101,9 @@ def deadtimer():
             del neighbors[dead_neighbor]
             if dead_neighbor in rib:
                 rib[dead_neighbor][2]+=1
-        sendDD()
+
+        if dead_neighbor:
+            sendDD()
         time.sleep(10)
 
 def sendHello():
@@ -203,7 +205,7 @@ def main():
             printRIB()
         elif x == '3':
             break
-        x = raw_input("1. View neighbors 2. Routing information base 3. Stop & Exi")
+        x = raw_input("1. View neighbors 2. Routing information base 3. Stop & Exit")
 
     kill_all = 0
     hellothread.join(timeout = 1)
