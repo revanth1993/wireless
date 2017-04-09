@@ -71,13 +71,18 @@ def updateRIB(srcip, neighbor_rib):
             change = 1
             rib[entry] = [srcip,neighbor_rib[entry][0]+neighbors[srcip][1], neighbor_rib[entry][1]]
 
+
+
         else:
             sequence_number_neighbor = neighbor_rib[entry][1]
             delay_neighbor = neighbor_rib[entry][0]
             sequence_number_local = rib[entry][2]
             delay_local = rib[entry][1]
-            delay_to_neighbor = neighbors[entry][1]
-            if (sequence_number_neighbor == sequence_number_local or sequence_number_neighbor%2 != 0) and delay_local != min(delay_local,delay_neighbor+delay_to_neighbor):
+            delay_to_neighbor = neighbors[srcip][1]
+            if sequence_number_neighbor > sequence_number_local:
+                change = 1
+                rib[entry] = [srcip,delay_neighbor+delay_to_neighbor,neighbor_rib[entry][1]]
+            elif (sequence_number_neighbor == sequence_number_local) and delay_local != min(delay_local,delay_neighbor+delay_to_neighbor):
                 change = 1
                 rib[entry] = [srcip,delay_neighbor+delay_to_neighbor,neighbor_rib[entry][1]]
     if change:
