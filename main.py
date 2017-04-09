@@ -102,9 +102,9 @@ def deadtimer():
         for dead_neighbor in dead_neighbors:
             print "neighbor considered dead ",dead_neighbor
             del neighbors[dead_neighbor]
-            if dead_neighbor in rib and rib[dead_neighbor][2]%2 == 0:
-                rib[dead_neighbor][2]+=1
-
+            for entry in rib:
+                if (dead_neighbor == entry and rib[dead_neighbor][2]%2 == 0) or (rib[entry][0] == dead_neighbor and rib[dead_neighbor][2]%2 == 0):
+                    rib[dead_neighbor][2]+=1
         if dead_neighbors:
             sendDD()
         time.sleep(10)
