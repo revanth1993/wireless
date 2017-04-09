@@ -79,7 +79,7 @@ def updateRIB(srcip, neighbor_rib):
             delay_to_neighbor = neighbors[entry][1]
             if (sequence_number_neighbor == sequence_number_local or sequence_number_neighbor%2 != 0) and delay_local != min(delay_local,delay_neighbor+delay_to_neighbor):
                 change = 1
-                rib[entry] = [srcip,neighbor_rib[entry][0],neighbor_rib[entry][1]]
+                rib[entry] = [srcip,delay_neighbor+delay_to_neighbor,neighbor_rib[entry][1]]
     if change:
         sendDD()
 
@@ -197,7 +197,7 @@ def main():
     listenthread = threading.Thread(target=listenSocket, args=())
     listenthread.start()
 
-    x = raw_input("1. View neighbors 2. Routing information base 3. Stop & Exit")
+    x = raw_input("1. View neighbors 2. Routing information base 3. Stop & Exit\n")
     while(True):
         if x == '1':
             printNeighbors()
@@ -205,7 +205,7 @@ def main():
             printRIB()
         elif x == '3':
             break
-        x = raw_input("1. View neighbors 2. Routing information base 3. Stop & Exit")
+        x = raw_input("1. View neighbors 2. Routing information base 3. Stop & Exit\n")
 
     kill_all = 0
     hellothread.join(timeout = 1)
