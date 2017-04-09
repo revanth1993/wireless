@@ -71,8 +71,6 @@ def updateRIB(srcip, neighbor_rib):
             change = 1
             rib[entry] = [srcip,neighbor_rib[entry][0]+neighbors[srcip][1], neighbor_rib[entry][1]]
 
-
-
         else:
             sequence_number_neighbor = neighbor_rib[entry][1]
             delay_neighbor = neighbor_rib[entry][0]
@@ -104,7 +102,7 @@ def deadtimer():
         for dead_neighbor in dead_neighbors:
             print "neighbor considered dead ",dead_neighbor
             del neighbors[dead_neighbor]
-            if dead_neighbor in rib:
+            if dead_neighbor in rib and rib[dead_neighbor][2]%2 != 0:
                 rib[dead_neighbor][2]+=1
 
         if dead_neighbors:
