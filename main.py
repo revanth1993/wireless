@@ -55,9 +55,10 @@ def updateRIB(srcip, neighbor_rib):
     # 2) destination ip already present
     #       a) check sequence number if it is less discard
     #       b) if it is equal and even update with the minimum delay
-    #       c) if it is greater and odd neighbor is advertising that the destination ip is not reachable ?? how to tackle this?
-    #           may be making the delay to a max value 9999, while updating the local FIB if the delay is 9999 dont add an entry
-
+    #       c) if it is equal and odd discard
+    #       d) if it is greater and odd neighbor is advertising that the destination ip is not reachable update local rib
+    #       e) if dstip is yourself and the recieved seqnum is odd then increment to the odd+1 seq and send the DD
+    #       f)
     # updating RIB delay should be a sum of delay that neighbor advertises and delay to the neighbor
     # next hop is the srcip parameter passed to the function
 
