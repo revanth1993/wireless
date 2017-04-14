@@ -185,7 +185,9 @@ def printNeighbors():
 def main():
 
     global kill_all,interface,rib,local_ip
-
+    if len(sys.argv) < 2:
+        print "Usage python dsdv.py interface"
+        sys.exit(1)
     interface = sys.argv[1]
     hello_timer = 10
     dead_timer = 15
