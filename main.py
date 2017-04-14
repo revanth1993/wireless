@@ -187,6 +187,8 @@ def main():
     global kill_all,interface,rib,local_ip
 
     interface = sys.argv[1]
+    hello_timer = 10
+    dead_timer = 15
 
     # Intialise RIB
     # with local ip, set delay to 0, initiate a sequence number
@@ -194,10 +196,10 @@ def main():
     rib[local_ip] = [local_ip,0,2]
     neighbors[local_ip] = [ni.ifaddresses(interface)[AF_LINK][0]['addr'], 0 , 1]
 
-    hellothread = threading.Thread(target=sendHello, args=(10))
+    hellothread = threading.Thread(target=sendHello, args=(hello_timer,))
     hellothread.start()
 
-    deadtimerthread = threading.Thread(target=deadtimer, args=(15))
+    deadtimerthread = threading.Thread(target=deadtimer, args=(dead_timer,))
     deadtimerthread.start()
 
     listenthread = threading.Thread(target=listenSocket, args=())
