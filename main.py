@@ -89,7 +89,7 @@ def updateRIB(srcip, neighbor_rib):
     if change:
         sendDD()
 
-def deadtimer():
+def deadtimer(timer):
     global kill_all, neighbors, rib
 
     while kill_all:
@@ -110,9 +110,9 @@ def deadtimer():
                     rib[dead_neighbor][2]+=1
         if dead_neighbors:
             sendDD()
-        time.sleep(10)
+        time.sleep(timer)
 
-def sendHello():
+def sendHello(timer):
     # periodically send hello packets through the interface
     global kill_all
     s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
@@ -125,7 +125,7 @@ def sendHello():
         packet = hellopacket + timestamp
         s.send(packet)
         print "[SND HELLO] ", t
-        time.sleep(10)
+        time.sleep(timer)
 
 
 def updateFIB():
@@ -194,10 +194,10 @@ def main():
     rib[local_ip] = [local_ip,0,2]
     neighbors[local_ip] = [ni.ifaddresses(interface)[AF_LINK][0]['addr'], 0 , 1]
 
-    hellothread = threading.Thread(target=sendHello, args=())
+    hellothread = threading.Thread(target=sendHello, args=(10))
     hellothread.start()
 
-    deadtimerthread = threading.Thread(target=deadtimer, args=())
+    deadtimerthread = threading.Thread(target=deadtimer, args=(15))
     deadtimerthread.start()
 
     listenthread = threading.Thread(target=listenSocket, args=())
