@@ -156,7 +156,7 @@ def listenSocket():
             stamp_now = (t.second%10)*100000 + t.microsecond/10
             timestamp = ord(packet[35])*10000 + ord(packet[36])*100 + ord(packet[37])
             print "[RCV HELLO REPLY] ",src_ip, t
-            delay = ((stamp_now - timestamp)+10)%10
+            delay = ((stamp_now - timestamp)+100000)%100000
             update_neighbors(src_ip,src_mac,delay,1)
 
         elif dsdv_type == 3:
