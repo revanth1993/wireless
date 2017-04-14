@@ -8,7 +8,7 @@ from datetime import datetime
 from struct import *
 import netifaces as ni
 from netifaces import *
-
+local_ip=''
 neighbors = {}
 rib = {}
 kill_all = 1
@@ -62,9 +62,8 @@ def updateRIB(srcip, neighbor_rib):
     # updating RIB delay should be a sum of delay that neighbor advertises and delay to the neighbor
     # next hop is the srcip parameter passed to the function
 
-    global rib,neighbors
+    global rib,neighbors,local_ip
     change = 0
-
     print "updating RIB with neighbor ",neighbor_rib
     for entry in neighbor_rib:
 
@@ -78,7 +77,10 @@ def updateRIB(srcip, neighbor_rib):
             sequence_number_local = rib[entry][2]
             delay_local = rib[entry][1]
             delay_to_neighbor = neighbors[srcip][1]
-            if sequence_number_neighbor > sequence_number_local:
+            if entry == local_ip and sequence_number_neighbor%2!=0:
+                rib[entry] = [entry,0,sequence_number_neighbor+1]
+                change = 1
+            elif sequence_number_neighbor > sequence_number_local:
                 change = 1
                 rib[entry] = [srcip,delay_neighbor+delay_to_neighbor,neighbor_rib[entry][1]]
             elif (sequence_number_neighbor == sequence_number_local) and delay_local != min(delay_local,delay_neighbor+delay_to_neighbor):
@@ -182,15 +184,15 @@ def printNeighbors():
 
 def main():
 
-    global kill_all,interface,rib
+    global kill_all,interface,rib,local_ip
 
     interface = sys.argv[1]
 
     # Intialise RIB
     # with local ip, set delay to 0, initiate a sequence number
-    ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
-    rib[ip] = [ip,0,2]
-    neighbors[ip] = [ni.ifaddresses(interface)[AF_LINK][0]['addr'], 0 , 1]
+    local_ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
+    rib[local_ip] = [local_ip,0,2]
+    neighbors[local_ip] = [ni.ifaddresses(interface)[AF_LINK][0]['addr'], 0 , 1]
 
     hellothread = threading.Thread(target=sendHello, args=())
     hellothread.start()
