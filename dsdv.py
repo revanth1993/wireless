@@ -16,21 +16,24 @@ interface = ''
 
 # on reception of hello reply packet update neighbors
 def update_neighbors(srcip, s_mac, delay, flag):
-    # three conditions
-    # 1. srcip not present in neighbors table update neighbors table and trigger a DD packet
-    # 2. srcip already present delay is within the acceptable range update the delay
-    # 3. srcip already present delay is way off, remove it from the neighbors table trigger a DD packet
+# modified conditions
+    # 1.srcip not present and delay less than acceptable delay then only update and trigger sendDD()
+    # 2. Acceptable delay setting as 5ms.
     global neighbors
-    if srcip not in neighbors:
+    if srcip not in neighbors and delay <= acceptableDelay:
         print "first entry in neighbors table and sending a DD packet"
-        neighbors[srcip] = [s_mac,delay,flag]
+        neighbors[srcip] = [s_mac,delay,age]
         print neighbors
         sendDD()
 
     else:
-        print "updating table with new delay"
-        neighbors[srcip] = [s_mac,delay,flag]
+        print "updating table with respect to new delay"
+        if dealy <= acceptableDelay:
+            neighbors[srcip] = [s_mac,delay,age]
+        else:
+            del neighbors[srcip]
         print neighbors
+        sendDD()
 
 # on an update on local RIB send a DD packet
 def sendDD():
