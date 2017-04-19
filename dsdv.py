@@ -2,7 +2,7 @@ import DDPacket
 import ExtractPacket
 import HelloPacket,HelloReplyPacket
 import socket
-import time,sys
+import time,sys,os
 import threading
 from datetime import datetime
 from struct import *
@@ -88,7 +88,7 @@ def updateRIB(srcip, neighbor_rib):
                 rib[entry] = [srcip,delay_neighbor+delay_to_neighbor,neighbor_rib[entry][1]]
     if change:
         sendDD()
-
+        updateFIB()
 def deadtimer(timer):
     global kill_all, neighbors, rib
 
@@ -130,7 +130,15 @@ def sendHello(timer):
 
 def updateFIB():
     #update the host FIB
-    pass
+    global rib
+
+    for entry in rib:
+        if rib[entry][1] == 0 or rib[entry][2] % 2 != 0:
+            continue
+        else:
+            print "ip route add "+entry+"/32 via "+rib[entry][0]
+            os.system("ip route add "+entry+"/32 via "+rib[entry][0])
+
 
 def listenSocket():
     global kill_all
