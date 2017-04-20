@@ -23,14 +23,14 @@ def update_neighbors(srcip, s_mac, delay, flag):
     global acceptableDelay = 5000
     if srcip not in neighbors and delay <= acceptableDelay:
         print "first entry in neighbors table and sending a DD packet"
-        neighbors[srcip] = [s_mac,delay,age]
+        neighbors[srcip] = [s_mac,delay,flag]
         print neighbors
         sendDD()
 
     else:
         print "updating table with respect to new delay"
         if delay <= acceptableDelay:
-            neighbors[srcip] = [s_mac,delay,age]
+            neighbors[srcip] = [s_mac,delay,flag]
         else:
             del neighbors[srcip]
         print neighbors
