@@ -13,14 +13,14 @@ neighbors = {}
 rib = {}
 kill_all = 1
 interface = ''
-
+acceptableDelay = 5000
 # on reception of hello reply packet update neighbors
 def update_neighbors(srcip, s_mac, delay, flag):
 # modified conditions
     # 1.srcip not present and delay less than acceptable delay then only update and trigger sendDD()
     # 2. Acceptable delay setting as 5ms.
     global neighbors
-    global acceptableDelay = 5000
+
     if srcip not in neighbors and delay <= acceptableDelay:
         print "first entry in neighbors table and sending a DD packet"
         neighbors[srcip] = [s_mac,delay,flag]
