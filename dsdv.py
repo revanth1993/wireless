@@ -27,7 +27,7 @@ def update_neighbors(srcip, s_mac, delay, flag):
         print neighbors
         sendDD()
 
-    else:
+    elif srcip in neighbors:
         print "updating table with respect to new delay"
         if delay <= acceptableDelay:
             neighbors[srcip] = [s_mac,delay,flag]
