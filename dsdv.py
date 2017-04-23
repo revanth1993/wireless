@@ -31,10 +31,8 @@ def update_neighbors(srcip, s_mac, delay, flag):
         print "updating table with respect to new delay"
         if delay <= acceptableDelay:
             neighbors[srcip] = [s_mac,delay,flag]
-        else:
-            del neighbors[srcip]
-        print neighbors
-        sendDD()
+            print neighbors
+            sendDD()
 
 # on an update on local RIB send a DD packet
 def sendDD():
@@ -141,6 +139,7 @@ def updateFIB():
             continue
         else:
             print "ip route add "+entry+"/32 via "+rib[entry][0]
+            os.system("ip route del "+entry+"/32")
             os.system("ip route add "+entry+"/32 via "+rib[entry][0])
 
 
@@ -226,6 +225,7 @@ def main():
         elif x == '2':
             printRIB()
         elif x == '3':
+
             break
         x = raw_input("1. View neighbors 2. Routing information base 3. Stop & Exit\n")
 
@@ -234,6 +234,9 @@ def main():
     listenthread.join(timeout = 1)
     deadtimerthread.join(timeout = 1)
 
+    for entry in rib:
+        print "ip route del "+entry+"/32"
+        os.system("ip route del "+entry+"/32")
 
 
 
