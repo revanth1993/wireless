@@ -32,7 +32,6 @@ def update_neighbors(srcip, s_mac, delay, flag):
         if delay <= acceptableDelay:
             neighbors[srcip] = [s_mac,delay,flag]
             print neighbors
-            sendDD()
 
 # on an update on local RIB send a DD packet
 def sendDD():
@@ -92,7 +91,7 @@ def updateRIB(srcip, neighbor_rib):
                 rib[entry] = [srcip,delay_neighbor+delay_to_neighbor,neighbor_rib[entry][1]]
     if change:
         sendDD()
-        #updateFIB()
+        updateFIB()
 def deadtimer(timer):
     global kill_all, neighbors, rib
 
@@ -115,7 +114,7 @@ def deadtimer(timer):
                     rib[dead_neighbor][2]+=1
         if dead_neighbors:
             sendDD()
-            #updateFIB()
+            updateFIB()
         time.sleep(timer)
 
 def sendHello(timer):
@@ -142,7 +141,6 @@ def updateFIB():
         if rib[entry][1] == 0 or rib[entry][2] % 2 != 0:
             print "ip route del "+entry+"/32"
             os.system("ip route del "+entry+"/32")
-            continue
         else:
             print "ip route del "+entry+"/32"
             os.system("ip route del "+entry+"/32")
