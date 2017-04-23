@@ -38,11 +38,13 @@ def update_neighbors(srcip, s_mac, delay, flag):
 def sendDD():
     global interface
     global rib
+    updateFIB()
     s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
     s.bind((interface,0))
     s.send(DDPacket.ddPacket(interface,rib))
     print "[SND DD PACKET] ",rib
     s.close()
+
 
 # on reception of hello reply packet if triggers a change in the local RIB or on reception of DD packet
 # which results in the change of local RIB update RIB
@@ -90,7 +92,7 @@ def updateRIB(srcip, neighbor_rib):
                 rib[entry] = [srcip,delay_neighbor+delay_to_neighbor,neighbor_rib[entry][1]]
     if change:
         sendDD()
-        updateFIB()
+        #updateFIB()
 def deadtimer(timer):
     global kill_all, neighbors, rib
 
@@ -107,11 +109,13 @@ def deadtimer(timer):
         for dead_neighbor in dead_neighbors:
             print "neighbor considered dead ",dead_neighbor
             del neighbors[dead_neighbor]
+
             for entry in rib:
                 if (dead_neighbor == entry and rib[dead_neighbor][2]%2 == 0) or (rib[entry][0] == dead_neighbor and rib[dead_neighbor][2]%2 == 0):
                     rib[dead_neighbor][2]+=1
         if dead_neighbors:
             sendDD()
+            #updateFIB()
         time.sleep(timer)
 
 def sendHello(timer):
@@ -136,10 +140,13 @@ def updateFIB():
 
     for entry in rib:
         if rib[entry][1] == 0 or rib[entry][2] % 2 != 0:
+            print "ip route del "+entry+"/32"
+            os.system("ip route del "+entry+"/32")
             continue
         else:
-            print "ip route add "+entry+"/32 via "+rib[entry][0]
+            print "ip route del "+entry+"/32"
             os.system("ip route del "+entry+"/32")
+            print "ip route add "+entry+"/32 via "+rib[entry][0]
             os.system("ip route add "+entry+"/32 via "+rib[entry][0])
 
 
