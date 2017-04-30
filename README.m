@@ -1,9 +1,24 @@
-# wireless
+# DSDV routing protocol
+
+Code should be run with super user privileges
 
 Install netifaces using pip module
 
-Run sudo python HelloPacket.py interfacename  to send a sample hello packet
-use wireshark to capture the packet and observe the fields
+pip install netifaces
+
+Each individual file of HelloPacket.py HelloReplyPacket.py DDPacket.py can be run independently to generate packets
+
+Run sudo python HelloPacket.py interfacename
+
+Use wireshark to capture the packet and observe the fields
+
+To run the protocol
+
+python dsdv.py interfacename
+
+for ex: python dsdv.py eth0
+
+
 
 
 
